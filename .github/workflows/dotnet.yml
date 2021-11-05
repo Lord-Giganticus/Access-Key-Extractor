@@ -31,8 +31,7 @@ jobs:
     - uses: actions/upload-artifact@v2.2.4
       with:
         name: Windows
-        path: |
-          "*.zip"
+        path: Access-Key-Extractor-Win.zip
           
   Build-Linux:
    
@@ -55,4 +54,10 @@ jobs:
         run: |
          pushd ${{ github.workspace }}
          cd Access-Key-Extractor.CLI/bin/Release/net5.0
-         ls
+         mv Access-Key-Extractor.CLI Extractor
+         7z a "${{ github.workspace }}\Access-Key-Extractor-Linux.zip" Extractor Access-Key-Extractor.CLI.dll Access-Key-Extractor.Library.dll Access-Key-Extractor.CLI.runtimeconfig.json
+         popd
+      - uses: actions/upload-artifact@v2.2.4
+        with:
+          name: Linux
+          path: Access-Key-Extractor-Linux.zip
