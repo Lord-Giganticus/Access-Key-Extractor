@@ -60,4 +60,4 @@ jobs:
       - uses: actions/upload-artifact@v2.2.4
         with:
           name: Linux
-          path: ${{ github.workspace }}\Access-Key-Extractor-Linux.zip
+          path: ${{ github.workspace }}/Access-Key-Extractor-Linux.zip
