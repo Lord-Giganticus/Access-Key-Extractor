@@ -62,3 +62,29 @@ jobs:
           name: Linux
           path: |
             ${{ github.workspace }}/Access-Key-Extractor-Linux.zip
+            
+            
+  Publish:
+    if: github.ref == 'refs/heads/main'
+    needs: [Build-Win, Build-Linux]
+    
+    runs-on: windows-latest
+    
+    steps:
+      - uses: actions/checkout@v2.3.4
+      - uses: actions/download-artifact@v2.0.10
+        with:
+          name: Windows
+          path: ${{ github.workspace }}
+      - uses: actions/download-artifact@v2.0.10
+        with:
+          name: Linux
+          path: ${{ github.workspace }}
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "Auto"
+          prerelease: true
+          title: "Auto Build"
+          files: |
+            *.zip
