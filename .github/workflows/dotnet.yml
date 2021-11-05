@@ -65,7 +65,7 @@ jobs:
             
             
   Publish:
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/master'
     needs: [Build-Win, Build-Linux]
     
     runs-on: windows-latest
