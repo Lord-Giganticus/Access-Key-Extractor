@@ -54,5 +54,5 @@ jobs:
       - shell: bash
         run: |
          pushd ${{ github.workspace }}
-         cd Access-Key-Extractor/Access-Key-Extractor.CLI/bin/Release/net5.0
+         cd Access-Key-Extractor.CLI/bin/Release/net5.0
          ls
