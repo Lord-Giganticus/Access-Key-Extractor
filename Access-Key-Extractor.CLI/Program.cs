@@ -14,6 +14,7 @@ namespace Access_Key_Extractor.CLI
             if (args.Length <= 0)
             {
                 Console.WriteLine("Usage:\nExtractor.exe [path]");
+                return;
             }
             var arg = args[0];
             var file = new RomFile(arg);
