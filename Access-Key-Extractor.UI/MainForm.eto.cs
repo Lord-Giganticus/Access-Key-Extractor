@@ -13,6 +13,7 @@ namespace Access_Key_Extractor.UI
             Title = "Access Key Extractor UI";
             MinimumSize = new Size(400, 400);
             Padding = 10;
+            Location = new Point((int)(Screen.WorkingArea.Width / 3), (int)(Screen.WorkingArea.Height / 4));
 
             Content = new TextBox { ReadOnly = true, Text = string.Empty };
 
