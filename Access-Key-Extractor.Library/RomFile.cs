@@ -24,20 +24,19 @@ namespace Access_Key_Extractor.Library
 
         public RomFile(string file) : this(new FileInfo(file)) { }
 
-        public string[] GetKeys()
+        public string[] GetKeys() => GetKeys(File.ReadAllBytes(InFile.FullName));
+
+        public static string[] GetKeys(byte[] Buffer)
         {
-            var data = File.ReadAllBytes(InFile.FullName);
             using var ms = new MemoryStream();
-            ms.Write(data, 0, data.Length);
+            ms.Write(Buffer, 0, Buffer.Length);
             ms.Seek(0, SeekOrigin.Begin);
             using var sr = new StreamReader(ms, Encoding.Latin1);
             var contents = sr.ReadToEnd();
             var reg = new Regex(@"([a-f0-9]\0){8}");
             var matches = reg.Matches(contents);
             if (matches.Count <= 0)
-            {
                 return Array.Empty<string>();
-            }
             var possiblekeys = matches.Select(Decode).Distinct().ToArray();
             for (int i = 0; i < possiblekeys.Length; i++)
                 possiblekeys[i] = possiblekeys[i][1..].Replace("\0", string.Empty);
