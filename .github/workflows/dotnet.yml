@@ -65,11 +65,11 @@ jobs:
          mkdir UI
          cd Access-Key-Extractor.CLI/bin/Release/net5.0
          mv Access-Key-Extractor.CLI Extractor
-         cp Extractor Access-Key-Extractor.CLI.dll Access-Key-Extractor.Library.dll Access-Key-Extractor.CLI.runtimeconfig.json "${{ github.workspace }}\CLI"
+         cp Extractor Access-Key-Extractor.CLI.dll Access-Key-Extractor.Library.dll Access-Key-Extractor.CLI.runtimeconfig.json "${{ github.workspace }}/CLI"
          popd
          pushd %CD%
          cd Access-Key-Extractor/Access-Key-Extractor.UI/bin/Gtk/net5.0/
-         cp *.dll Access-Key-Extractor.UI Access-Key-Extractor.UI.runtimeconfig.json "${{ github.workspace }}\UI"
+         cp *.dll Access-Key-Extractor.UI Access-Key-Extractor.UI.runtimeconfig.json "${{ github.workspace }}/UI"
          popd
       - uses: actions/upload-artifact@v2.2.4
         with:
