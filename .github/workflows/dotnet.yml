@@ -24,14 +24,22 @@ jobs:
     - shell: cmd
       run: |
         pushd ${{ github.workspace }}
+        mkdir CLI
+        mkdir UI
         cd Access-Key-Extractor.CLI\bin\Release\net5.0
         Ren Access-Key-Extractor.CLI.exe Extractor.exe
-        7z a "${{ github.workspace }}\Access-Key-Extractor-Win.zip" Extractor.exe Access-Key-Extractor.CLI.dll Access-Key-Extractor.Library.dll Access-Key-Extractor.CLI.runtimeconfig.json
+        cp Extractor.exe Access-Key-Extractor.CLI.dll Access-Key-Extractor.Library.dll Access-Key-Extractor.CLI.runtimeconfig.json "${{ github.workspace }}\CLI"
+        popd
+        pushd %CD%
+        cd Access-Key-Extractor.UI\bin\Wpf\net5.0-windows
+        cp *.dll *.exe Access-Key-Extractor.UI.runtimeconfig.json "${{ github.workspace }}\UI"
         popd
     - uses: actions/upload-artifact@v2.2.4
       with:
         name: Windows
-        path: Access-Key-Extractor-Win.zip
+        path: |
+          ${{ github.workspace }}\CLI
+          ${{ github.workspace }}\UI
           
   Build-Linux:
    
@@ -47,21 +55,25 @@ jobs:
         run: dotnet restore
       - name: Build
         run: dotnet build --no-restore /p:Configuration=Release
-      - run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends p7zip-full
       - shell: bash
         run: |
          pushd ${{ github.workspace }}
+         mkdir CLI
+         mkdir UI
          cd Access-Key-Extractor.CLI/bin/Release/net5.0
          mv Access-Key-Extractor.CLI Extractor
-         7z a "${{ github.workspace }}/Access-Key-Extractor-Linux.zip" Extractor Access-Key-Extractor.CLI.dll Access-Key-Extractor.Library.dll Access-Key-Extractor.CLI.runtimeconfig.json
+         cp Extractor Access-Key-Extractor.CLI.dll Access-Key-Extractor.Library.dll Access-Key-Extractor.CLI.runtimeconfig.json "${{ github.workspace }}/CLI"
+         popd
+         pushd ${{ github.workspace }}
+         cd  Access-Key-Extractor.UI/bin/Gtk/net5.0/
+         cp *.dll Access-Key-Extractor.UI Access-Key-Extractor.UI.runtimeconfig.json "${{ github.workspace }}/UI"
          popd
       - uses: actions/upload-artifact@v2.2.4
         with:
           name: Linux
           path: |
-            ${{ github.workspace }}/Access-Key-Extractor-Linux.zip
+            ${{ github.workspace }}/CLI
+            ${{ github.workspace }}/UI
             
             
   Publish:
@@ -76,10 +88,18 @@ jobs:
         with:
           name: Windows
           path: ${{ github.workspace }}
+      - shell: cmd
+        run: |
+          7z a "Access-Key-Extractor-Win.zip" CLI UI
+          rm -r CLI UI
       - uses: actions/download-artifact@v2.0.10
         with:
           name: Linux
           path: ${{ github.workspace }}
+      - shell: cmd
+        run: |
+          7z a "Access-Key-Extractor-Linux.zip" CLI UI
+          rm -r CLI UI
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
