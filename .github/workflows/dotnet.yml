@@ -32,7 +32,7 @@ jobs:
         popd
         pushd %CD%
         cd Access-Key-Extractor.UI\bin\Wpf\net5.0-windows
-        cp *.dll *.exe Access-Key-Extractor.UI.runtimeconfig.json "${{ github.workspace }\UI"
+        cp *.dll *.exe Access-Key-Extractor.UI.runtimeconfig.json "${{ github.workspace }}\UI"
         popd
     - uses: actions/upload-artifact@v2.2.4
       with:
@@ -69,7 +69,7 @@ jobs:
          popd
          pushd %CD%
          cd Access-Key-Extractor/Access-Key-Extractor.UI/bin/Gtk/net5.0/
-         cp *.dll Access-Key-Extractor.UI Access-Key-Extractor.UI.runtimeconfig.json "${{ github.workspace }\UI"
+         cp *.dll Access-Key-Extractor.UI Access-Key-Extractor.UI.runtimeconfig.json "${{ github.workspace }}\UI"
          popd
       - uses: actions/upload-artifact@v2.2.4
         with:
