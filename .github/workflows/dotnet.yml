@@ -67,7 +67,7 @@ jobs:
          mv Access-Key-Extractor.CLI Extractor
          cp Extractor Access-Key-Extractor.CLI.dll Access-Key-Extractor.Library.dll Access-Key-Extractor.CLI.runtimeconfig.json "${{ github.workspace }}/CLI"
          popd
-         pushd %CD%
+         pushd ${{ github.workspace }}
          cd Access-Key-Extractor/Access-Key-Extractor.UI/bin/Gtk/net5.0/
          cp *.dll Access-Key-Extractor.UI Access-Key-Extractor.UI.runtimeconfig.json "${{ github.workspace }}/UI"
          popd
