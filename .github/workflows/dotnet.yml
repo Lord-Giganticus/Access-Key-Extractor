@@ -55,9 +55,6 @@ jobs:
         run: dotnet restore
       - name: Build
         run: dotnet build --no-restore /p:Configuration=Release
-      - run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends p7zip-full
       - shell: bash
         run: |
          pushd ${{ github.workspace }}
@@ -80,7 +77,7 @@ jobs:
             
             
   Publish:
-    if: github.ref == 'refs/heads/maste'
+    if: github.ref == 'refs/heads/master'
     needs: [Build-Win, Build-Linux]
     
     runs-on: windows-latest
@@ -91,10 +88,18 @@ jobs:
         with:
           name: Windows
           path: ${{ github.workspace }}
+      - shell: cmd
+        run: |
+          7z a "Access-Key-Extractor-Win.zip" CLI UI
+          rm -r CLI UI
       - uses: actions/download-artifact@v2.0.10
         with:
           name: Linux
           path: ${{ github.workspace }}
+      - shell: cmd
+        run: |
+          7z a "Access-Key-Extractor-Linux.zip" CLI UI
+          rm -r CLI UI
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
