@@ -24,14 +24,22 @@ jobs:
     - shell: cmd
       run: |
         pushd ${{ github.workspace }}
+        mkdir CLI
+        mkdir UI
         cd Access-Key-Extractor.CLI\bin\Release\net5.0
         Ren Access-Key-Extractor.CLI.exe Extractor.exe
-        7z a "${{ github.workspace }}\Access-Key-Extractor-Win.zip" Extractor.exe Access-Key-Extractor.CLI.dll Access-Key-Extractor.Library.dll Access-Key-Extractor.CLI.runtimeconfig.json
+        cp Extractor.exe Access-Key-Extractor.CLI.dll Access-Key-Extractor.Library.dll Access-Key-Extractor.CLI.runtimeconfig.json "${{ github.workspace }}\CLI"
+        popd
+        pushd %CD%
+        cd Access-Key-Extractor.UI\bin\Wpf\net5.0-windows
+        cp *.dll *.exe Access-Key-Extractor.UI.runtimeconfig.json "${{ github.workspace }\UI"
         popd
     - uses: actions/upload-artifact@v2.2.4
       with:
         name: Windows
-        path: Access-Key-Extractor-Win.zip
+        path: |
+          ${{ github.workspace }}\CLI
+          ${{ github.workspace }}\UI
           
   Build-Linux:
    
@@ -53,19 +61,26 @@ jobs:
       - shell: bash
         run: |
          pushd ${{ github.workspace }}
+         mkdir CLI
+         mkdir UI
          cd Access-Key-Extractor.CLI/bin/Release/net5.0
          mv Access-Key-Extractor.CLI Extractor
-         7z a "${{ github.workspace }}/Access-Key-Extractor-Linux.zip" Extractor Access-Key-Extractor.CLI.dll Access-Key-Extractor.Library.dll Access-Key-Extractor.CLI.runtimeconfig.json
+         cp Extractor Access-Key-Extractor.CLI.dll Access-Key-Extractor.Library.dll Access-Key-Extractor.CLI.runtimeconfig.json "${{ github.workspace }}\CLI"
+         popd
+         pushd %CD%
+         cd Access-Key-Extractor/Access-Key-Extractor.UI/bin/Gtk/net5.0/
+         cp *.dll Access-Key-Extractor.UI Access-Key-Extractor.UI.runtimeconfig.json "${{ github.workspace }\UI"
          popd
       - uses: actions/upload-artifact@v2.2.4
         with:
           name: Linux
           path: |
-            ${{ github.workspace }}/Access-Key-Extractor-Linux.zip
+            ${{ github.workspace }}/CLI
+            ${{ github.workspace }}/UI
             
             
   Publish:
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/maste'
     needs: [Build-Win, Build-Linux]
     
     runs-on: windows-latest
