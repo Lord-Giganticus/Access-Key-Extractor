@@ -3,6 +3,7 @@ using Eto.Forms;
 using Access_Key_Extractor.Library;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace Access_Key_Extractor.UI
 {
@@ -15,7 +16,7 @@ namespace Access_Key_Extractor.UI
             Padding = 10;
             Location = new Point((int)(Screen.WorkingArea.Width / 3), (int)(Screen.WorkingArea.Height / 4));
 
-            Content = new TextBox { ReadOnly = true, Text = string.Empty };
+            Content = new TextBox { ReadOnly = true, Text = string.Empty, Size = Size };
 
             // create a few commands that can be used for the menu and toolbar
             var clickMe = new Command { MenuText = "Open a elf or bin file"};
@@ -38,7 +39,7 @@ namespace Access_Key_Extractor.UI
                 {
                     RomFile file = new(ofd.FileName);
                     var keys = file.GetKeys();
-                    string data = $"[ '{string.Join("', '", keys[..^1])}', '{keys[^1]}' ]";
+                    string data = $"[ '{string.Join("', '", keys.Take(keys.Length - 2))}', '{keys.Last()}' ]";
                     ((TextBox)Content).Text = $"Possible access keys (the correct key is usually one of the first)\n{data}";
                 }
             };
@@ -87,7 +88,9 @@ namespace Access_Key_Extractor.UI
             if (sfd.ShowDialog(this) is DialogResult.Ok)
             {
                 var data = ((TextBox)Content).Text;
-                data = data[(data.IndexOf("\n") + 1)..];
+#pragma warning disable IDE0057 // Use range operator
+                data = data.Substring(data.IndexOf("\n") + 1);
+#pragma warning restore IDE0057 // Use range operator
                 File.WriteAllText(sfd.FileName, data);
             }
         }
